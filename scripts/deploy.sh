@@ -3,10 +3,10 @@
 set -e # exit on error
 
 # Source the .env file to load the variables
-if [ -f .env.deployment ]; then
-    source .env.deployment
+if [ -f .env ]; then
+    source .env
 else
-    echo "Error: .env.deployment file not found"
+    echo "Error: .env file not found"
     exit 1
 fi
 
@@ -21,6 +21,7 @@ chains["arbitrum"]="$ARBITRUM_RPC_URL"
 chains["optimism"]="$OPTIMISM_RPC_URL"
 chains["base"]="$BASE_RPC_URL"
 chains["zksync"]="$ZKSYNC_RPC_URL"
+chains["linea"]="$LINEA_RPC_URL"
 
 rpc_url="${chains["$1"]}"
 if [ -z "$rpc_url" ]; then
@@ -30,7 +31,7 @@ fi
 echo "Provided chain: $1"
 echo "RPC URL: $rpc_url"
 
-keystore="$HOME/.foundry-keystores/$2"
+keystore="$HOME/.foundry/keystores/$2"
 echo "Keystore: $keystore"
 if [ -e "$keystore" ]; then
     echo "Keystore provided"
