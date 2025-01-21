@@ -49,10 +49,8 @@ jobs:
           repository: matter-labs/foundry-zksync
           ref: 'main'
           path: 'foundry-zksync'
-
       - name: Install Foundry for zksync
         run: cd foundry-zksync/foundryup-zksync && ../install-foundry-zksync
-
       - name: Run tests
         run: FOUNDRY_PROFILE=zksync forge test -vvv --zksync
 
@@ -81,9 +79,8 @@ jobs:
           repository: matter-labs/foundry-zksync
           ref: 'main'
           path: 'foundry-zksync'
-
       - name: Install Foundry for zksync
-        run: ./foundry-zksync/install-foundry-zksync
+        run: cd foundry-zksync/foundryup-zksync && ../install-foundry-zksync
       - name: Run coverage
         run: yarn coverage:zksync
       - uses: codecov/codecov-action@v4
