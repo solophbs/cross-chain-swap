@@ -6,7 +6,7 @@ import { Script } from "forge-std/Script.sol";
 
 import { Timelocks } from "contracts/libraries/TimelocksLib.sol";
 import { IBaseEscrow } from "contracts/interfaces/IBaseEscrow.sol";
-import { IResolverExample } from "contracts/interfaces/IResolverExample.sol";
+import { EscrowFactory } from "contracts/EscrowFactory.sol";
 
 import { CrossChainTestLib } from "test/utils/libraries/CrossChainTestLib.sol";
 
@@ -14,7 +14,7 @@ contract DeployEscrowDst is Script {
     function run() external {
         address deployer = vm.envAddress("DEPLOYER_ADDRESS");
         uint256 deployerPK = vm.envUint("DEPLOYER_PRIVATE_KEY");
-        IResolverExample resolver = IResolverExample(vm.envAddress("RESOLVER"));
+        EscrowFactory factory = EscrowFactory(vm.envAddress("ESCROW_FACTORY"));
         bytes32 orderHash = vm.envBytes32("ORDER_HASH");
         Timelocks timelocks = Timelocks.wrap(vm.envUint("TIMELOCKS"));
 
@@ -25,13 +25,13 @@ contract DeployEscrowDst is Script {
         uint256 safetyDeposit = 1;
         bytes32 secret = keccak256(abi.encodePacked("secret"));
         bytes32 hashlock = keccak256(abi.encode(secret));
-        
+
         IBaseEscrow.Immutables memory escrowImmutables = CrossChainTestLib.buildDstEscrowImmutables(
             orderHash,
             hashlock,
             dstAmount,
             maker,
-            address(resolver),
+            maker, // taker
             dstToken,
             safetyDeposit,
             timelocks
@@ -41,7 +41,7 @@ contract DeployEscrowDst is Script {
 
         {
             vm.startBroadcast(deployerPK);
-            resolver.deployDst{ value: dstAmount + safetyDeposit }(
+            factory.createDstEscrow{ value: dstAmount + safetyDeposit }(
                 escrowImmutables,
                 srcCancellationTimestamp
             );

@@ -13,7 +13,7 @@ contract WithdrawDst is Script {
     function run() external {
         address deployer = vm.envAddress("DEPLOYER_ADDRESS");
         uint256 deployerPK = vm.envUint("DEPLOYER_PRIVATE_KEY");
-        IResolverExample resolver = IResolverExample(vm.envAddress("RESOLVER"));
+        address escrow = vm.envAddress("ESCROW_DST");
         address dstToken = address(0); // ETH
         bytes32 orderHash = vm.envBytes32("ORDER_HASH");
         Timelocks timelocks = Timelocks.wrap(vm.envUint("TIMELOCKS"));
@@ -36,17 +36,8 @@ contract WithdrawDst is Script {
             timelocks: timelocks
         });
 
-        address escrow = vm.envAddress("ESCROW_DST");
-        // address escrow = IEscrowFactory(escrowFactory).addressOfEscrowDst(immutables);
-
-        address[] memory targets = new address[](1);
-        bytes[] memory data = new bytes[](1);
-        targets[0] = escrow;
-        data[0] = abi.encodeWithSelector(IBaseEscrow(escrow).withdraw.selector, secret, immutables);
-
         vm.startBroadcast(deployerPK);
-        // IBaseEscrow(escrow).withdraw(secret, immutables);
-        resolver.arbitraryCalls(targets, data);
+        IBaseEscrow(escrow).withdraw(secret, immutables);
         vm.stopBroadcast();
     }
 }
