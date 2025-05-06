@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 /*──────────────────────────────────────────────────────────────────────────────
- * DISCLAIMER
+ * WARNING!
  * ----------
  * This smart-contract code has **NOT** undergone a formal security audit and
  * may contain bugs, vulnerabilities, or other defects. It is provided solely
