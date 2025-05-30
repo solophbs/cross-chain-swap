@@ -23,6 +23,7 @@ chains["base"]="$BASE_RPC_URL"
 chains["zksync"]="$ZKSYNC_RPC_URL"
 chains["linea"]="$LINEA_RPC_URL"
 chains["sonic"]="$SONIC_RPC_URL"
+chains["unichain"]="$UNICHAIN_RPC_URL"
 
 rpc_url="${chains["$1"]}"
 if [ -z "$rpc_url" ]; then
